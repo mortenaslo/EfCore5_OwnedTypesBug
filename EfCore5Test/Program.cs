@@ -28,10 +28,16 @@ namespace EfCore5Test
 
                     if (!await myDbContext.MyCoolModels.AnyAsync())
                     {
+                        var first = new FirstModel();
+                        var second = new SecondModel();
+                        myDbContext.Firsts.Add(first);
+                        myDbContext.Seconds.Add(second);
+                        await myDbContext.SaveChangesAsync();
                         myDbContext.MyCoolModels.Add(new MyCoolModel()
                         {
                             SomeText = "Hello World",
-                            Id = new MyCoolKey() { FirstId = 1, SecondId = 1 }
+                            First = first,
+                            Second = second
                         });
                         await myDbContext.SaveChangesAsync();
                     }

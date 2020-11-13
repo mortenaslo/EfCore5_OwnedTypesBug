@@ -18,6 +18,18 @@ namespace EfCore5Test.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("EfCore5Test.Db.FirstModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Firsts");
+                });
+
             modelBuilder.Entity("EfCore5Test.Db.MyCoolModel", b =>
                 {
                     b.Property<int>("FirstId")
@@ -31,11 +43,37 @@ namespace EfCore5Test.Migrations
 
                     b.HasKey("FirstId", "SecondId");
 
-                    b.ToTable("my_cools","cool_stuff");
+                    b.HasIndex("SecondId");
+
+                    b.ToTable("MyCoolModels");
+                });
+
+            modelBuilder.Entity("EfCore5Test.Db.SecondModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Seconds");
                 });
 
             modelBuilder.Entity("EfCore5Test.Db.MyCoolModel", b =>
                 {
+                    b.HasOne("EfCore5Test.Db.FirstModel", "First")
+                        .WithMany()
+                        .HasForeignKey("FirstId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EfCore5Test.Db.SecondModel", "Second")
+                        .WithMany()
+                        .HasForeignKey("SecondId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("EfCore5Test.Db.MyCoolKey", "Id", b1 =>
                         {
                             b1.Property<int>("MyCoolModelFirstId")
@@ -54,7 +92,7 @@ namespace EfCore5Test.Migrations
 
                             b1.HasKey("MyCoolModelFirstId", "MyCoolModelSecondId");
 
-                            b1.ToTable("my_cools");
+                            b1.ToTable("MyCoolModels");
 
                             b1.WithOwner()
                                 .HasForeignKey("MyCoolModelFirstId", "MyCoolModelSecondId");

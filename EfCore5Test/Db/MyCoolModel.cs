@@ -1,15 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace EfCore5Test.Db
+﻿namespace EfCore5Test.Db
 {
-    [Table("my_cools", Schema = "cool_stuff")]
     public class MyCoolModel
     {
         public MyCoolModel() => Id = new MyCoolKey();
 
         public int FirstId { get => Id.FirstId; set => Id.FirstId = value; }
 
-        //public int SecondId { get => Id.SecondId; set => Id.SecondId = value; }
+        public virtual FirstModel First { get; set; }
+        public virtual SecondModel Second { get; set; }
+
+        public int SecondId { get => Id.SecondId; set => Id.SecondId = value; }
 
         public MyCoolKey Id { get; set; }
 
@@ -20,5 +20,21 @@ namespace EfCore5Test.Db
     {
         public int FirstId { get; set; }
         public int SecondId { get; set; }
+    }
+
+    public class FirstModel
+    {
+        public int Id
+        {
+            get; set;
+        }
+    }
+
+    public class SecondModel
+    {
+        public int Id
+        {
+            get; set;
+        }
     }
 }
