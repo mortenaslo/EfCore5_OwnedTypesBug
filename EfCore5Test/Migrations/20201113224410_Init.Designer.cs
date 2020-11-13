@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfCore5Test.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20201113131025_Init")]
+    [Migration("20201113224410_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,6 +19,18 @@ namespace EfCore5Test.Migrations
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("EfCore5Test.Db.FirstModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Firsts");
+                });
 
             modelBuilder.Entity("EfCore5Test.Db.MyCoolModel", b =>
                 {
@@ -35,11 +47,37 @@ namespace EfCore5Test.Migrations
 
                     b.HasKey("FirstId", "SecondId");
 
-                    b.ToTable("my_cools", "cool_stuff");
+                    b.HasIndex("SecondId");
+
+                    b.ToTable("MyCoolModels");
+                });
+
+            modelBuilder.Entity("EfCore5Test.Db.SecondModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Seconds");
                 });
 
             modelBuilder.Entity("EfCore5Test.Db.MyCoolModel", b =>
                 {
+                    b.HasOne("EfCore5Test.Db.FirstModel", "First")
+                        .WithMany()
+                        .HasForeignKey("FirstId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EfCore5Test.Db.SecondModel", "Second")
+                        .WithMany()
+                        .HasForeignKey("SecondId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("EfCore5Test.Db.MyCoolKey", "Id", b1 =>
                         {
                             b1.Property<int>("MyCoolModelFirstId")
@@ -58,13 +96,17 @@ namespace EfCore5Test.Migrations
 
                             b1.HasKey("MyCoolModelFirstId", "MyCoolModelSecondId");
 
-                            b1.ToTable("my_cools");
+                            b1.ToTable("MyCoolModels");
 
                             b1.WithOwner()
                                 .HasForeignKey("MyCoolModelFirstId", "MyCoolModelSecondId");
                         });
 
+                    b.Navigation("First");
+
                     b.Navigation("Id");
+
+                    b.Navigation("Second");
                 });
 #pragma warning restore 612, 618
         }
