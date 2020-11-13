@@ -34,33 +34,31 @@ namespace EfCore5Test.Migrations
                 name: "MyCoolModels",
                 columns: table => new
                 {
-                    MyCoolModel_FirstId = table.Column<int>(type: "int", nullable: false),
-                    MyCoolModel_SecondId = table.Column<int>(type: "int", nullable: false),
-                    FirstId = table.Column<int>(type: "int", nullable: true),
-                    SecondId = table.Column<int>(type: "int", nullable: true),
+                    FirstId = table.Column<int>(type: "int", nullable: false),
+                    SecondId = table.Column<int>(type: "int", nullable: false),
                     SomeText = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MyCoolModels", x => new { x.MyCoolModel_FirstId, x.MyCoolModel_SecondId });
+                    table.PrimaryKey("PK_MyCoolModels", x => new { x.FirstId, x.SecondId });
                     table.ForeignKey(
-                        name: "FK_MyCoolModels_Firsts_MyCoolModel_FirstId",
-                        column: x => x.MyCoolModel_FirstId,
+                        name: "FK_MyCoolModels_Firsts_FirstId",
+                        column: x => x.FirstId,
                         principalTable: "Firsts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MyCoolModels_Seconds_MyCoolModel_SecondId",
-                        column: x => x.MyCoolModel_SecondId,
+                        name: "FK_MyCoolModels_Seconds_SecondId",
+                        column: x => x.SecondId,
                         principalTable: "Seconds",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MyCoolModels_MyCoolModel_SecondId",
+                name: "IX_MyCoolModels_SecondId",
                 table: "MyCoolModels",
-                column: "MyCoolModel_SecondId");
+                column: "SecondId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

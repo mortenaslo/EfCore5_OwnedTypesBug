@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfCore5Test.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20201113224410_Init")]
+    [Migration("20201113231050_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,12 +35,10 @@ namespace EfCore5Test.Migrations
             modelBuilder.Entity("EfCore5Test.Db.MyCoolModel", b =>
                 {
                     b.Property<int>("FirstId")
-                        .HasColumnType("int")
-                        .HasColumnName("MyCoolModel_FirstId");
+                        .HasColumnType("int");
 
                     b.Property<int>("SecondId")
-                        .HasColumnType("int")
-                        .HasColumnName("MyCoolModel_SecondId");
+                        .HasColumnType("int");
 
                     b.Property<string>("SomeText")
                         .HasColumnType("nvarchar(max)");
@@ -78,33 +76,7 @@ namespace EfCore5Test.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("EfCore5Test.Db.MyCoolKey", "Id", b1 =>
-                        {
-                            b1.Property<int>("MyCoolModelFirstId")
-                                .HasColumnType("int");
-
-                            b1.Property<int>("MyCoolModelSecondId")
-                                .HasColumnType("int");
-
-                            b1.Property<int>("FirstId")
-                                .HasColumnType("int")
-                                .HasColumnName("FirstId");
-
-                            b1.Property<int>("SecondId")
-                                .HasColumnType("int")
-                                .HasColumnName("SecondId");
-
-                            b1.HasKey("MyCoolModelFirstId", "MyCoolModelSecondId");
-
-                            b1.ToTable("MyCoolModels");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MyCoolModelFirstId", "MyCoolModelSecondId");
-                        });
-
                     b.Navigation("First");
-
-                    b.Navigation("Id");
 
                     b.Navigation("Second");
                 });

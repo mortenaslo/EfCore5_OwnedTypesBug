@@ -15,24 +15,33 @@ namespace EfCore5Test.Db
         {
             var entityBuilder = modelBuilder.Entity<MyCoolModel>();
 
-            entityBuilder.OwnsOne(record => record.Id, p =>
+            entityBuilder.Ignore(x => x.Id);
+            var properties = typeof(MyCoolKey).GetProperties();
+            foreach (var property in properties)
             {
-                var properties = p.OwnedEntityType.ClrType.GetProperties();
-                foreach (var property in properties)
-                {
-                    var propertyType = property.PropertyType;
+                var propertyType = property.PropertyType;
+                entityBuilder.Property(propertyType, property.Name);
+            }
+            entityBuilder.HasKey(properties.Select(x => x.Name).ToArray());
 
-                    // Set column name for owned type to name of property
-                    // This is ignored and prefixed with the owned type name, when the column already exists from another property. 
-                    p.Property(propertyType, property.Name).HasColumnName(property.Name);
+            //entityBuilder.OwnsOne(record => record.Id, p =>
+            //{
+            //    var properties = p.OwnedEntityType.ClrType.GetProperties();
+            //    foreach (var property in properties)
+            //    {
+            //        var propertyType = property.PropertyType;
 
-                    // Include property as a shadow property (if not in model). 
-                    // If not added, HasKey fails. 
-                    entityBuilder.Property(propertyType, property.Name);
-                }
+            //        // Set column name for owned type to name of property
+            //        // This is ignored and prefixed with the owned type name, when the column already exists from another property. 
+            //        p.Property(propertyType, property.Name).HasColumnName(property.Name);
 
-                entityBuilder.HasKey(properties.Select(x => x.Name).ToArray());
-            });
+            //        // Include property as a shadow property (if not in model). 
+            //        // If not added, HasKey fails. 
+            //        entityBuilder.Property(propertyType, property.Name);
+            //    }
+
+            //    entityBuilder.HasKey(properties.Select(x => x.Name).ToArray());
+            //});
 
 
             base.OnModelCreating(modelBuilder);
