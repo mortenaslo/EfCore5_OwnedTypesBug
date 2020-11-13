@@ -14,13 +14,15 @@ namespace EfCore5Test.Migrations
                 schema: "cool_stuff",
                 columns: table => new
                 {
-                    FirstId = table.Column<int>(nullable: false),
-                    SecondId = table.Column<int>(nullable: false),
-                    SomeText = table.Column<string>(nullable: true)
+                    MyCoolModel_FirstId = table.Column<int>(type: "int", nullable: false),
+                    MyCoolModel_SecondId = table.Column<int>(type: "int", nullable: false),
+                    FirstId = table.Column<int>(type: "int", nullable: true),
+                    SecondId = table.Column<int>(type: "int", nullable: true),
+                    SomeText = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_my_cools", x => new { x.FirstId, x.SecondId });
+                    table.PrimaryKey("PK_my_cools", x => new { x.MyCoolModel_FirstId, x.MyCoolModel_SecondId });
                 });
         }
 

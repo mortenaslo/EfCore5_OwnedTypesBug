@@ -9,31 +9,33 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfCore5Test.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20201113130800_Init")]
+    [Migration("20201113131025_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.10")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("EfCore5Test.Db.MyCoolModel", b =>
                 {
                     b.Property<int>("FirstId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("MyCoolModel_FirstId");
 
                     b.Property<int>("SecondId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("MyCoolModel_SecondId");
 
                     b.Property<string>("SomeText")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FirstId", "SecondId");
 
-                    b.ToTable("my_cools","cool_stuff");
+                    b.ToTable("my_cools", "cool_stuff");
                 });
 
             modelBuilder.Entity("EfCore5Test.Db.MyCoolModel", b =>
@@ -47,12 +49,12 @@ namespace EfCore5Test.Migrations
                                 .HasColumnType("int");
 
                             b1.Property<int>("FirstId")
-                                .HasColumnName("FirstId")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("FirstId");
 
                             b1.Property<int>("SecondId")
-                                .HasColumnName("SecondId")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("SecondId");
 
                             b1.HasKey("MyCoolModelFirstId", "MyCoolModelSecondId");
 
@@ -61,6 +63,8 @@ namespace EfCore5Test.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("MyCoolModelFirstId", "MyCoolModelSecondId");
                         });
+
+                    b.Navigation("Id");
                 });
 #pragma warning restore 612, 618
         }
